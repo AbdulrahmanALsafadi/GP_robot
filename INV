@@ -1,0 +1,65 @@
+import math
+
+class Inverse:
+    l1 = 203
+    l2 = 160.84
+    l3 = 100
+    l4 = 324
+    l5 = 58
+    l6 = 95.6
+
+    def InverseKinematics(self, x, y):
+        # Calculate theta 2
+        theta2_radians = math.acos((x*2 + y2 - self.l12 - self.l2*2) / (2 * self.l1 * self.l2))
+        theta2_degrees = math.degrees(theta2_radians)
+
+        # Calculate theta 1
+        theta1_radians = math.atan((self.l2 * math.sin(theta2_radians)) / (self.l1 + self.l2 * math.cos(theta2_radians) )) - math.atan(y/x) + math.pi/2
+        theta1_degrees = math.degrees(theta1_radians)
+
+        # Calculate alpha 71 from triangle 1
+        ct1_squared = self.l6*2 + self.l1*2 - 2 * self.l1 * self.l6 * math.cos(math.pi - theta1_radians)
+        ct1 = math.sqrt(ct1_squared)
+
+        alpha71_radians = math.acos((self.l6*2 + ct12 - self.l1*2) / (2 * self.l6 * ct1))
+        alpha71_degrees = math.degrees(alpha71_radians)
+
+        At1_radians = math.asin(self.l6 * (math.sin(alpha71_radians) / self.l1))
+        At1_degrees = math.degrees(At1_radians)
+
+        # Calculate alpha 72 from triangle 2
+        ct2_squared = self.l3*2 + ct1*2 - 2 * self.l3 * ct1 * math.cos(math.pi - 2.11 + theta2_radians - At1_radians)
+        ct2 = math.sqrt(ct2_squared)
+
+        alpha72_radians = math.acos((ct1*2 + ct22 - self.l3*2) / (2 * ct1 * ct2))
+        alpha72_degrees = math.degrees(alpha72_radians)
+
+        # Calculate alpha 73 from triangle 3
+        alpha73_radians = math.acos((self.l5*2 + ct22 - self.l4*2) / (2 * self.l5 * ct2))
+        alpha73_degrees = math.degrees(alpha73_radians)
+
+        # Calculate theta 3
+        theta3_degrees =  180 - (alpha71_degrees + alpha72_degrees + alpha73_degrees)
+
+        return theta1_degrees, theta2_degrees, theta3_degrees
+
+
+def main():
+    # Instantiate the Inverse class
+    inverse_kinematics = Inverse()
+    
+    # Provide x and y values for testing
+    x = 88.73
+    y = 330.95
+
+    # Call the InverseKinematics method
+    theta1, theta2, theta3 = inverse_kinematics.InverseKinematics(x, y)
+
+    # Print the results
+    print(f"Theta 1: {theta1} degrees")
+    print(f"Theta 2: {theta2} degrees")
+    print(f"Theta 3: {theta3} degrees")
+
+
+if _name_ == "_main_":
+    main()
