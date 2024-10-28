@@ -1,0 +1,188 @@
+import math
+from std_msgs.msg import Int16
+import rospy
+
+class Inverse:
+    l1 = 203
+    l2 = 160.84
+    l3 = 60
+    l4 = 324
+    l5 = 58
+    l6 = 95.6
+    lf = 98.08  # Hypothetical value for the foot length, adjust as needed
+
+    def InverseKinematicsFoot(self, x, y, z, alpha, beta):
+        x1 = x + ((self.lf / 2) * math.cos(math.radians(beta)) * math.cos(math.radians(alpha)))
+        x2 = x - ((self.lf / 2) * math.cos(math.radians(beta)) * math.cos(math.radians(alpha)))
+
+        y1 = y + ((self.lf / 2) * math.cos(math.radians(beta)) * math.sin(math.radians(alpha)))
+        y2 = y - ((self.lf / 2) * math.cos(math.radians(beta)) * math.sin(math.radians(alpha)))
+
+        z1 = z + ((self.lf / 2) * math.sin(math.radians(beta)) * math.sin(math.radians(alpha)))
+        z2 = z - ((self.lf / 2) * math.sin(math.radians(beta)) * math.sin(math.radians(alpha)))
+        return x1, x2, y1, y2, z1, z2
+
+    # Hip Motor 1DOF
+    def InverseKinematicsHip(self, y, z):
+        thetaHip = math.atan2(y, z)
+        return math.degrees(thetaHip)
+
+    # Upper&Lower Motor 2DOF
+    def InverseKinematics(self, x, z):
+        cos_theta2 = (x**2 + z**2 - self.l1**2 - self.l2**2) / (2 * self.l1 * self.l2)
+        cos_theta2 = max(-1, min(1, cos_theta2))  # Clamp to [-1, 1]
+        theta2_radians = math.acos(cos_theta2)
+        theta2 = math.degrees(theta2_radians)
+
+        # Calculate theta 1
+        theta1_radians = math.atan((self.l2 * math.sin(theta2_radians)) / (self.l1 + self.l2 * math.cos(theta2_radians))) - math.atan(z / x) + math.pi / 2
+        theta1 = math.degrees(theta1_radians)
+
+        # Calculate ct1 for alpha 71
+        ct1_squared = self.l6**2 + self.l1**2 - 2 * self.l1 * self.l6 * math.cos(math.pi - theta1_radians)
+        ct1 = math.sqrt(ct1_squared)
+
+        # Calculate alpha 71
+        cos_alpha71 = (self.l6**2 + ct1**2 - self.l1**2) / (2 * self.l6 * ct1)
+        cos_alpha71 = max(-1, min(1, cos_alpha71))  # Clamp to [-1, 1]
+        alpha71_radians = math.acos(cos_alpha71)
+        alpha71_degrees = math.degrees(alpha71_radians)
+
+        # Calculate At1
+        sin_At1 = self.l6 * (math.sin(alpha71_radians) / self.l1)
+        sin_At1 = max(-1, min(1, sin_At1))  # Clamp to [-1, 1]
+        At1_radians = math.asin(sin_At1)
+        At1_degrees = math.degrees(At1_radians)
+
+        # Calculate ct2 for alpha 72
+        ct2_squared = self.l3**2 + ct1**2 - 2 * self.l3 * ct1 * math.cos(math.pi - 2.11 + theta2_radians - At1_radians)
+        ct2 = math.sqrt(ct2_squared)
+
+        # Calculate alpha 72
+        cos_alpha72 = (ct1**2 + ct2**2 - self.l3**2) / (2 * ct1 * ct2)
+        cos_alpha72 = max(-1, min(1, cos_alpha72))  # Clamp to [-1, 1]
+        alpha72_radians = math.acos(cos_alpha72)
+        alpha72_degrees = math.degrees(alpha72_radians)
+
+        # Calculate alpha 73
+        cos_alpha73 = (self.l5**2 + ct2**2 - self.l4**2) / (2 * self.l5 * ct2)
+        cos_alpha73 = max(-1, min(1, cos_alpha73))  # Clamp to [-1, 1]
+        alpha73_radians = math.acos(cos_alpha73)
+        alpha73_degrees = math.degrees(alpha73_radians)
+
+        # Calculate theta 3
+        theta3 =  (alpha71_degrees + alpha72_degrees + alpha73_degrees)
+
+        return theta1, theta2, theta3
+
+def main():
+    # Instantiate the Inverse class
+    inv = Inverse()
+
+    # Provide x and y values for testing
+    user_input_RightLeg = input("Enter integer values for x, y, z, alpha, beta for the right leg separated by spaces: ")
+    x, y, z, alpha, beta = map(float, user_input_RightLeg.split())
+
+    foot_results = inv.InverseKinematicsFoot(x, y, z, alpha, beta)
+    print("InverseKinematicsFoot Results: Right side position")
+    print(f"x1: {foot_results[0]}, y1: {foot_results[2]}, z1: {foot_results[4]}")
+    print("InverseKinematicsFoot Results: Left side position")
+    print(f"x2: {foot_results[1]}, y2: {foot_results[3]}, z2: {foot_results[5]}")
+
+    # Use x1, y1, z1 for right side calculations
+    x1, y1, z1 = foot_results[0], foot_results[2], foot_results[4]
+    #x1,y1,z1 = foot_results[1], foot_results[3], foot_results[5]
+    theta1r, theta2r, theta3r = inv.InverseKinematics(x1, z1)
+    thetaHipr = inv.InverseKinematicsHip(y1, z1)
+
+    # Print the results for the right side
+    print("RIGHT SIDE OF THE LEG")
+    print(f"Theta 1 Lower motor: {theta1r} degrees")
+    print(f"Theta 2 knee: {theta2r} degrees")
+    print(f"Theta 3 Upper motor: {theta3r} degrees")
+    print(f"Theta Hip Upper motor: {thetaHipr} degrees")
+
+    theta1shiftedr = theta1r + 180
+    theta3shiftedr = theta3r + 27
+    thetaHipshiftedr = thetaHipr + 180
+    print("---------------")
+    print(f"Theta1 shifted Lower motor: {theta1shiftedr} degrees")
+    print(f"Theta2 shifted knee: {theta2r} degrees")
+    print(f"Theta3 shifted Upper motor: {theta3shiftedr} degrees")
+    print(f"Theta Hip shifted: {thetaHipshiftedr} degrees")
+    print("---------------")
+    print(f"Theta1 shifted Lower motor decimal: {int(theta1shiftedr / 360 * 4096)}")
+    print(f"Theta3 shifted Upper motor decimal: {int(theta3shiftedr / 360 * 4096)}")
+    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedr / 360 * 4096)}")
+
+    print("******************************************************")
+    
+    # Use x2, y2, z2 for left side calculations
+    x2, y2, z2 = foot_results[1], foot_results[3], foot_results[5]
+    #x2, y2, z2 = foot_results[0], foot_results[2], foot_results[4]
+    theta1l, theta2l, theta3l = inv.InverseKinematics(x2, z2)
+    thetaHipl = inv.InverseKinematicsHip(y2, z2)
+
+   
+    print("LEFT SIDE OF THE LEG")
+    print(f"Theta 1 Lower motor: {theta1l} degrees")
+    print(f"Theta 2 knee: {theta2l} degrees")
+    print(f"Theta 3 Upper motor: {theta3l} degrees")
+    print(f"Theta Hip Upper motor: {thetaHipl} degrees")
+
+    theta1shiftedl = theta1l + 180
+    theta3shiftedl = theta3l + 27
+    thetaHipshiftedl = thetaHipl + 180
+
+    print("---------------")
+    print(f"Theta1 shifted Lower motor: {theta1shiftedl} degrees")
+    print(f"Theta2 shifted knee: {theta2l} degrees")
+    print(f"Theta3 shifted Upper motor: {theta3shiftedl} degrees")
+    print(f"Theta Hip shifted: {thetaHipshiftedl} degrees")
+
+    print("---------------")
+    print(f"Theta1 shifted Lower motor decimal: {int(theta1shiftedl / 360 * 4096)}")
+    print(f"Theta3 shifted Upper motor decimal: {int(theta3shiftedl / 360 * 4096)}")
+    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedl / 360 * 4096)}")
+
+    return theta1shiftedr, theta2r, theta3shiftedr, thetaHipshiftedr, theta1shiftedl, theta3shiftedl, theta2l, thetaHipshiftedl
+
+def moveMotor():
+    rospy.init_node('moveMotor', anonymous=True)
+
+    pubTh1r14 = rospy.Publisher('r14', Int16, queue_size=10)
+    pubTh3r13 = rospy.Publisher('r13', Int16, queue_size=10)
+    pubThHipr15 = rospy.Publisher('r15', Int16, queue_size=10)
+    pubTh1l12 = rospy.Publisher('r12', Int16, queue_size=10)
+    pubTh3l11 = rospy.Publisher('r11', Int16, queue_size=10)
+    pubThr16 = rospy.Publisher('r16', Int16, queue_size=10)
+
+    theta1shiftedr, _, theta3shiftedr, thetaHipshiftedr, theta1shiftedl, theta3shiftedl, _, _ = main()
+
+    motor_pos_Th1r14 = int(theta1shiftedr / 360 * 4096)
+    motor_pos_Th3r13 = int(theta3shiftedr / 360 * 4096)
+    motor_pos_ThHipr15 = int(thetaHipshiftedr / 360 * 4096)
+    motor_pos_Th1l12 = int(theta1shiftedl / 360 * 4096)
+    motor_pos_Th3l11 = int(theta3shiftedl / 360 * 4096)
+
+    rospy.sleep(1)
+
+    rospy.loginfo(f"Publishing to r14: {motor_pos_Th1r14}")
+    rospy.loginfo(f"Publishing to r13: {motor_pos_Th3r13}")
+    rospy.loginfo(f"Publishing to r15: {motor_pos_ThHipr15}")
+    rospy.loginfo(f"Publishing to r12: {motor_pos_Th1l12}")
+    rospy.loginfo(f"Publishing to r11: {motor_pos_Th3l11}")
+
+    pubTh1r14.publish(motor_pos_Th1r14)
+    pubTh3r13.publish(motor_pos_Th3r13)
+    pubThHipr15.publish(motor_pos_ThHipr15)
+    pubTh1l12.publish(motor_pos_Th1l12)
+    pubTh3l11.publish(motor_pos_Th3l11)
+
+    rospy.sleep(1)
+
+if __name__ == "__main__":
+    try:
+        moveMotor()
+    except rospy.ROSInterruptException:
+        pass
