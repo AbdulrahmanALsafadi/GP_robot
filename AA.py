@@ -213,7 +213,7 @@ def mainLeft():
    
     return theta1shiftedr, theta2r, theta3shiftedr, thetaHipshiftedr, theta1shiftedl, theta2l, theta3shiftedl , thetaHipshiftedl, gammal
 
-def moveMotor():
+def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26):
     rospy.init_node('moveMotor', anonymous=True)
     
     #For the Right leg
@@ -231,11 +231,6 @@ def moveMotor():
     pubTh1r22 = rospy.Publisher('r22', Int16, queue_size=10)
     pubTh3r21 = rospy.Publisher('r21', Int16, queue_size=10)
     pubGammalr26 = rospy.Publisher('r26', Int16, queue_size=10)
-
-    theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
-    theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
-
-
 
     
     rospy.sleep(1)  # Allow time for publisher to connect
@@ -272,7 +267,8 @@ def moveMotor():
     pubTh3r21.publish(mov21)
     pubGammalr26.publish(mov26)
     
-    # Example: Assuming the motor has a 12-bit encoder with 4096 ticks per revolution
+def mainmain():    
+# Example: Assuming the motor has a 12-bit encoder with 4096 ticks per revolution
     MAX_ENCODER_VALUE = 4096  # Adjust if your motor has a different resolution
 
     def rad_to_deg(radians):
@@ -305,6 +301,10 @@ def moveMotor():
             return position_deg + 180
         else:
             print(f"No data found for motor named {motor_name}")
+
+    theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
+    theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
+
 
     # Convert to motor-specific range for the Right leg
     dectheta3shiftedlr = int(theta3shiftedlr / 360 * 4096)
