@@ -4,8 +4,32 @@
 import math
 from std_msgs.msg import Int16
 import rospy
+from sensor_msgs.msg import JointState
 
+class MotorHandler:
+    def get_motor_position(motor_name):
+        """Fetch and display the motor position in radians, degrees, and decimal ticks."""
+        # Wait for a single message from the topic
+        data = rospy.wait_for_message('/dynamixel_workbench/joint_states', JointState)
 
+        # Check if the motor name exists and print its position
+        if motor_name in data.name:
+            index = data.name.index(motor_name)
+            position_rad = data.position[index] + math.pi
+
+            # Convert to degrees and decimal encoder ticks
+            position_deg = math.degrees(position_rad)
+
+            # Display all three formats
+            print(f"Motor: {motor_name}")
+            print(f"Position (Radians): {position_rad}")
+            print(f"Position (Degrees): {position_deg}")
+            
+            return position_deg
+        else:
+            print(f"No data found for motor named {motor_name}")
+            return None
+        
 class Inverse:
     l1 = 203
     l2 = 160.84
@@ -251,6 +275,7 @@ def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,
     rospy.loginfo(f"Publishing to r21: {mov21}")
     rospy.loginfo(f"Publishing to r26: {mov26}")
 
+
     # Publish for the Right leg
     pubTh1r14.publish(mov14)
     pubTh3r13.publish(mov13)
@@ -267,40 +292,10 @@ def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,
     pubTh3r21.publish(mov21)
     pubGammalr26.publish(mov26)
     
+    rospy.sleep(1)  # Give time for messages to be sent
+    
 def mainmain():    
-# Example: Assuming the motor has a 12-bit encoder with 4096 ticks per revolution
-    MAX_ENCODER_VALUE = 4096  # Adjust if your motor has a different resolution
 
-    def rad_to_deg(radians):
-        #"""Convert radians to degrees."""
-        return radians * (180 / math.pi)
-
-    def rad_to_decimal(radians):
-        #"""Convert radians to encoder ticks (decimal position)."""
-        return (radians / (2 * math.pi)) * MAX_ENCODER_VALUE
-
-    def get_motor_position(motor_name):
-        """Fetch and display the motor position in radians, degrees, and decimal ticks."""
-       # Wait for a single message from the topic
-        data = rospy.wait_for_message('/dynamixel_workbench/joint_states', JointState)
-
-      # Check if the motor name exists and print its position
-        if motor_name in data.name:
-            index = data.name.index(motor_name)
-            position_rad = data.position[index]
-
-            # Convert to degrees and decimal encoder ticks
-            position_deg = rad_to_deg(position_rad)
-            position_decimal = rad_to_decimal(position_rad)
-
-            # Display all three formats
-            print(f"Motor: {motor_name}")
-            print(f"Position (Radians): {position_rad:.6f}")
-            print(f"Position (Degrees): {position_deg:.2f}")
-            print(f"Position (Decimal): {position_decimal:.2f}")
-            return position_deg + 180
-        else:
-            print(f"No data found for motor named {motor_name}")
 
     theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
     theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
@@ -323,18 +318,18 @@ def mainmain():
     decgammal = int(gammal / 360 * 4096)
 
     # All current in decimal
-    current_position_r14 = get_motor_position('r14') / 360 * 4096
-    current_position_r13 = get_motor_position('r13') / 360 * 4096
-    current_position_r15 = get_motor_position('r15') / 360 * 4096
-    current_position_r12 = get_motor_position('r12') / 360 * 4096
-    current_position_r11 = get_motor_position('r11') / 360 * 4096
-    current_position_r16 = get_motor_position('r16') / 360 * 4096
-    current_position_r24 = get_motor_position('r24') / 360 * 4096
-    current_position_r23 = get_motor_position('r23') / 360 * 4096
-    current_position_r25 = get_motor_position('r25') / 360 * 4096
-    current_position_r22 = get_motor_position('r22') / 360 * 4096
-    current_position_r21 = get_motor_position('r21') / 360 * 4096
-    current_position_r26 = get_motor_position('r26') / 360 * 4096
+    current_position_r14 = MotorHandler.get_motor_position('r14') / 360 * 4096
+    current_position_r13 = MotorHandler.get_motor_position('r13') / 360 * 4096
+    current_position_r15 = MotorHandler.get_motor_position('r15') / 360 * 4096
+    current_position_r12 = MotorHandler.get_motor_position('r12') / 360 * 4096
+    current_position_r11 = MotorHandler.get_motor_position('r11') / 360 * 4096
+    current_position_r16 = MotorHandler.get_motor_position('r16') / 360 * 4096
+    current_position_r24 = MotorHandler.get_motor_position('r24') / 360 * 4096
+    current_position_r23 = MotorHandler.get_motor_position('r23') / 360 * 4096
+    current_position_r25 = MotorHandler.get_motor_position('r25') / 360 * 4096
+    current_position_r22 = MotorHandler.get_motor_position('r22') / 360 * 4096
+    current_position_r21 = MotorHandler.get_motor_position('r21') / 360 * 4096
+    current_position_r26 = MotorHandler.get_motor_position('r26') / 360 * 4096
 
     mov11 = current_position_r11 + 1
     mov12 = current_position_r12 + 1
@@ -385,6 +380,18 @@ def mainmain():
 
 if __name__ == "__main__":
     try:
-        moveMotor()
+        mov14 = MotorHandler.get_motor_position('r14') / 360 * 4096
+        mov13 = MotorHandler.get_motor_position('r13') / 360 * 4096
+        mov15 = MotorHandler.get_motor_position('r15') / 360 * 4096
+        mov12 = MotorHandler.get_motor_position('r12') / 360 * 4096
+        mov11 = MotorHandler.get_motor_position('r11') / 360 * 4096
+        mov16 = MotorHandler.get_motor_position('r16') / 360 * 4096
+        mov24 = MotorHandler.get_motor_position('r24') / 360 * 4096
+        mov23 = MotorHandler.get_motor_position('r23') / 360 * 4096
+        mov25 = MotorHandler.get_motor_position('r25') / 360 * 4096
+        mov22 = MotorHandler.get_motor_position('r22') / 360 * 4096
+        mov21 = MotorHandler.get_motor_position('r21') / 360 * 4096
+        mov26 = MotorHandler.get_motor_position('r26') / 360 * 4096
+        moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
     except rospy.ROSInterruptException:
         pass
