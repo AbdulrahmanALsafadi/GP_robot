@@ -118,9 +118,67 @@ class Inverse:
         theta3 =  (alpha71_degrees + alpha72_degrees + alpha73_degrees)
 
         return theta1, theta2, theta3
+   
+class move:    
+    def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26):
+        rospy.init_node('moveMotor', anonymous=True)
+        
+        #For the Right leg
+        pubTh1r14 = rospy.Publisher('r14', Int16, queue_size=10)
+        pubTh3r13 = rospy.Publisher('r13', Int16, queue_size=10)
+        pubThHipr15 = rospy.Publisher('r15', Int16, queue_size=10)
+        pubTh1r12 = rospy.Publisher('r12', Int16, queue_size=10)
+        pubTh3r11 = rospy.Publisher('r11', Int16, queue_size=10)
+        pubGammarr16 = rospy.Publisher('r16', Int16, queue_size=10)
 
-def mainRight():
-    # Instantiate the Inverse class
+        #For the Left leg
+        pubTh1r24 = rospy.Publisher('r24', Int16, queue_size=10)
+        pubTh3r23 = rospy.Publisher('r23', Int16, queue_size=10)
+        pubThHipr25 = rospy.Publisher('r25', Int16, queue_size=10)
+        pubTh1r22 = rospy.Publisher('r22', Int16, queue_size=10)
+        pubTh3r21 = rospy.Publisher('r21', Int16, queue_size=10)
+        pubGammalr26 = rospy.Publisher('r26', Int16, queue_size=10)
+
+        
+        rospy.sleep(1)  # Allow time for publisher to connect
+        
+        # Log info for the Right leg
+        rospy.loginfo(f"Publishing to r14: {mov14}")
+        rospy.loginfo(f"Publishing to r13: {mov13}")
+        rospy.loginfo(f"Publishing to r15: {mov15}")
+        rospy.loginfo(f"Publishing to r12: {mov12}")
+        rospy.loginfo(f"Publishing to r11: {mov11}")
+        rospy.loginfo(f"Publishing to r16: {mov16}")
+
+        # Log info for the Left leg
+        rospy.loginfo(f"Publishing to r24: {mov24}")
+        rospy.loginfo(f"Publishing to r23: {mov23}")
+        rospy.loginfo(f"Publishing to r25: {mov25}")
+        rospy.loginfo(f"Publishing to r22: {mov22}")
+        rospy.loginfo(f"Publishing to r21: {mov21}")
+        rospy.loginfo(f"Publishing to r26: {mov26}")
+
+
+        # Publish for the Right leg
+        pubTh1r14.publish(mov14)
+        pubTh3r13.publish(mov13)
+        pubThHipr15.publish(mov15)
+        pubTh1r12.publish(mov12)
+        pubTh3r11.publish(mov11)
+        pubGammarr16.publish(mov16)
+
+        # Publish for the Left leg
+        pubTh1r24.publish(mov24)
+        pubTh3r23.publish(mov23)
+        pubThHipr25.publish(mov25)
+        pubTh1r22.publish(mov22)
+        pubTh3r21.publish(mov21)
+        pubGammalr26.publish(mov26)
+        
+        rospy.sleep(1)  # Give time for messages to be sent
+
+def main():
+        # Instantiate the Inverse class
     inv = Inverse()
     
     # Provide values of the right leg
@@ -131,56 +189,52 @@ def mainRight():
     
     # Call the InverseKinematics method
     xAr , xBr , yAr , yBr , zAr , zBr = inv.InverseKinematicsFoot(xr, yr, zr, alphar, betar)
-    theta1r, theta2r, theta3r = inv.InverseKinematics(xBr, zBr)
+    theta1rr, theta2rr, theta3rr = inv.InverseKinematics(xBr, zBr)
     
-    thetaHipr = inv.InverseKinematicsHip(yBr, zBr)
+    thetaHiprr = inv.InverseKinematicsHip(yBr, zBr)
 
-    theta1l, theta2l, theta3l = inv.InverseKinematics(xAr, zAr)
-    thetaHipl = inv.InverseKinematicsHip(yAr, zAr)
+    theta1lr, theta2lr, theta3lr = inv.InverseKinematics(xAr, zAr)
+    thetaHiplr = inv.InverseKinematicsHip(yAr, zAr)
 
     # Print the results right 
-    print(f"Theta 1 Lower motor Right: {theta1r} degrees")
-    print(f"Theta 2 knee Right: {theta2r} degrees")
-    print(f"Theta 3 Upper motor Right: {theta3r} degrees")
-    print(f"Theta Hip Upper motor : {thetaHipr} degrees")
+    print(f"Theta 1 Lower motor Right: {theta1rr} degrees")
+    print(f"Theta 2 knee Right: {theta2rr} degrees")
+    print(f"Theta 3 Upper motor Right: {theta3rr} degrees")
+    print(f"Theta Hip Upper motor : {thetaHiprr} degrees")
     
-    theta1shiftedr = theta1r + 180
-    theta3shiftedr = theta3r + 27 
-    thetaHipshiftedr = thetaHipr + 180 
+    theta1shiftedrr = theta1rr + 180
+    theta3shiftedrr = theta3rr + 27 
+    thetaHipshiftedrr = thetaHiprr + 180 
 
-    print(f"Theta1 shifted Lower motor Right: {theta1shiftedr} degrees")
-    print(f"Theta2 shifted knee Right: {theta2r} degrees")
-    print(f"Theta3 shifted Upper motor Right: {theta3shiftedr} degrees")
-    print(f"Theta Hip shifted : {thetaHipshiftedr} degrees")
+    print(f"Theta1 shifted Lower motor Right: {theta1shiftedrr} degrees")
+    print(f"Theta2 shifted knee Right: {theta2rr} degrees")
+    print(f"Theta3 shifted Upper motor Right: {theta3shiftedrr} degrees")
+    print(f"Theta Hip shifted : {thetaHipshiftedrr} degrees")
 
-    print(f"Theta1 shifted Lower motor Right decimal: {int(theta1shiftedr / 360 * 4096)} ")
-    print(f"Theta3 shifted Upper motor Right decimal: {int(theta3shiftedr / 360 * 4096)} ")
-    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedr / 360 * 4096)} ")
+    print(f"Theta1 shifted Lower motor Right decimal: {int(theta1shiftedrr / 360 * 4096)} ")
+    print(f"Theta3 shifted Upper motor Right decimal: {int(theta3shiftedrr / 360 * 4096)} ")
+    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedrr / 360 * 4096)} ")
 
      # Print the results Left
-    print(f"Theta 1 Lower motor Left: {theta1l} degrees")
-    print(f"Theta 2 knee Left: {theta2l} degrees")
-    print(f"Theta 3 Upper motor Left: {theta3l} degrees")
-    print(f"Theta Hip Upper motor : {thetaHipl} degrees")
+    print(f"Theta 1 Lower motor Left: {theta1lr} degrees")
+    print(f"Theta 2 knee Left: {theta2lr} degrees")
+    print(f"Theta 3 Upper motor Left: {theta3lr} degrees")
+    print(f"Theta Hip Upper motor : {thetaHiplr} degrees")
     
-    theta1shiftedl = theta1l + 180
-    theta3shiftedl = theta3l + 27 
-    thetaHipshiftedl = thetaHipl + 180 
+    theta1shiftedlr = theta1lr + 180
+    theta3shiftedlr = theta3lr + 27 
+    thetaHipshiftedlr = thetaHiplr + 180 
 
-    print(f"Theta1 shifted Lower motor Left: {theta1shiftedl} degrees")
-    print(f"Theta2 shifted knee Left: {theta2l} degrees")
-    print(f"Theta3 shifted Upper motor Left: {theta3shiftedl} degrees")
-    print(f"Theta Hip shifted : {thetaHipshiftedl} degrees")
+    print(f"Theta1 shifted Lower motor Left: {theta1shiftedlr} degrees")
+    print(f"Theta2 shifted knee Left: {theta2lr} degrees")
+    print(f"Theta3 shifted Upper motor Left: {theta3shiftedlr} degrees")
+    print(f"Theta Hip shifted : {thetaHipshiftedlr} degrees")
 
-    print(f"Theta1 shifted Lower motor Left decimal: {int(theta1shiftedl / 360 * 4096)} ")
-    print(f"Theta3 shifted Upper motor Left decimal: {int(theta3shiftedl / 360 * 4096)} ")
-    print(f"TTheta Hip shifted decimal: {int(thetaHipshiftedl / 360 * 4096)} ")
-    return theta1shiftedr, theta2r, theta3shiftedr, thetaHipshiftedr, theta1shiftedl, theta2l, theta3shiftedl , thetaHipshiftedl, gammar
+    print(f"Theta1 shifted Lower motor Left decimal: {int(theta1shiftedlr / 360 * 4096)} ")
+    print(f"Theta3 shifted Upper motor Left decimal: {int(theta3shiftedlr / 360 * 4096)} ")
+    print(f"TTheta Hip shifted decimal: {int(thetaHipshiftedlr / 360 * 4096)} ")
 
-#second leg (left leg) 
-def mainLeft():   
-    # Instantiate the Inverse class
-    inv = Inverse()
+    # left leg ________________________________________________________________________________________
 
     print("Enter the value of Left leg:")
     xl, zl, yl, alphal, betal, gammal = map(float, input("xl, zl, yl, alphal, betal, gammal (separated by spaces): ").split())
@@ -188,194 +242,131 @@ def mainLeft():
     xAl , xBl , yAl , yBl , zAl , zBl = inv.InverseKinematicsFoot(xl, yl, zl, alphal, betal)
     
     # Call the InverseKinematics method
-    theta1r, theta2r, theta3r = inv.InverseKinematics(xAl, zAl)
+    theta1rl, theta2rl, theta3rl = inv.InverseKinematics(xAl, zAl)
     
-    thetaHipr = inv.InverseKinematicsHip2(yAl, zAl)
+    thetaHiprl = inv.InverseKinematicsHip2(yAl, zAl)
 
-    theta1l, theta2l, theta3l = inv.InverseKinematics(xBl, zBl)
-    thetaHipl = inv.InverseKinematicsHip2(yBl, zBl)
+    theta1ll, theta2ll, theta3ll = inv.InverseKinematics(xBl, zBl)
+    thetaHipll = inv.InverseKinematicsHip2(yBl, zBl)
 
 
     # Print the results right 
-    print(f"Theta 1 Lower motor Right: {theta1r} degrees")
-    print(f"Theta 2 knee Right: {theta2r} degrees")
-    print(f"Theta 3 Upper motor Right: {theta3r} degrees")
-    print(f"Theta Hip Upper motor : {thetaHipr} degrees")
+    print(f"Theta 1 Lower motor Right: {theta1rl} degrees")
+    print(f"Theta 2 knee Right: {theta2rl} degrees")
+    print(f"Theta 3 Upper motor Right: {theta3rl} degrees")
+    print(f"Theta Hip Upper motor : {thetaHiprl} degrees")
     
-    theta1shiftedr = theta1r + 180
-    theta3shiftedr = theta3r + 27 
-    thetaHipshiftedr = thetaHipr + 180 
+    theta1shiftedrl = theta1rl + 180
+    theta3shiftedrl = theta3rl + 27 
+    thetaHipshiftedrl = thetaHiprl + 180 
 
-    print(f"Theta1 shifted Lower motor Right: {theta1shiftedr} degrees")
-    print(f"Theta2 shifted knee Right: {theta2r} degrees")
-    print(f"Theta3 shifted Upper motor Right: {theta3shiftedr} degrees")
-    print(f"Theta Hip shifted : {thetaHipshiftedr} degrees")
+    print(f"Theta1 shifted Lower motor Right: {theta1shiftedrl} degrees")
+    print(f"Theta2 shifted knee Right: {theta2rl} degrees")
+    print(f"Theta3 shifted Upper motor Right: {theta3shiftedrl} degrees")
+    print(f"Theta Hip shifted : {thetaHipshiftedrl} degrees")
 
-    print(f"Theta1 shifted Lower motor Right decimal: {int(theta1shiftedr / 360 * 4096)} ")
-    print(f"Theta3 shifted Upper motor Right decimal: {int(theta3shiftedr / 360 * 4096)} ")
-    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedr / 360 * 4096)} ")
+    print(f"Theta1 shifted Lower motor Right decimal: {int(theta1shiftedrl / 360 * 4096)} ")
+    print(f"Theta3 shifted Upper motor Right decimal: {int(theta3shiftedrl / 360 * 4096)} ")
+    print(f"Theta Hip shifted decimal: {int(thetaHipshiftedrl / 360 * 4096)} ")
 
     # Print the results Left
-    print(f"Theta 1 Lower motor Left: {theta1l} degrees")
-    print(f"Theta 2 knee Left: {theta2l} degrees")
-    print(f"Theta 3 Upper motor Left: {theta3l} degrees")
-    print(f"Theta Hip Upper motor : {thetaHipl} degrees")
+    print(f"Theta 1 Lower motor Left: {theta1ll} degrees")
+    print(f"Theta 2 knee Left: {theta2ll} degrees")
+    print(f"Theta 3 Upper motor Left: {theta3ll} degrees")
+    print(f"Theta Hip Upper motor : {thetaHipll} degrees")
     
-    theta1shiftedl = theta1l + 180
-    theta3shiftedl = theta3l + 27 
-    thetaHipshiftedl = thetaHipl + 180 
+    theta1shiftedll = theta1ll + 180
+    theta3shiftedll = theta3ll + 27 
+    thetaHipshiftedll = thetaHipll + 180 
 
-    print(f"Theta1 shifted Lower motor Left: {theta1shiftedl} degrees")
-    print(f"Theta2 shifted knee Left: {theta2l} degrees")
-    print(f"Theta3 shifted Upper motor Left: {theta3shiftedl} degrees")
-    print(f"Theta Hip shifted : {thetaHipshiftedl} degrees")
+    print(f"Theta1 shifted Lower motor Left: {theta1shiftedll} degrees")
+    print(f"Theta2 shifted knee Left: {theta2ll} degrees")
+    print(f"Theta3 shifted Upper motor Left: {theta3shiftedll} degrees")
+    print(f"Theta Hip shifted : {thetaHipshiftedll} degrees")
 
-    print(f"Theta1 shifted Lower motor Left decimal: {int(theta1shiftedl / 360 * 4096)} ")
-    print(f"Theta3 shifted Upper motor Left decimal: {int(theta3shiftedl / 360 * 4096)} ")
-    print(f"TTheta Hip shifted decimal: {int(thetaHipshiftedl / 360 * 4096)} ")
-    
-   
-    return theta1shiftedr, theta2r, theta3shiftedr, thetaHipshiftedr, theta1shiftedl, theta2l, theta3shiftedl , thetaHipshiftedl, gammal
-
-def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26):
-    rospy.init_node('moveMotor', anonymous=True)
-    
-    #For the Right leg
-    pubTh1r14 = rospy.Publisher('r14', Int16, queue_size=10)
-    pubTh3r13 = rospy.Publisher('r13', Int16, queue_size=10)
-    pubThHipr15 = rospy.Publisher('r15', Int16, queue_size=10)
-    pubTh1r12 = rospy.Publisher('r12', Int16, queue_size=10)
-    pubTh3r11 = rospy.Publisher('r11', Int16, queue_size=10)
-    pubGammarr16 = rospy.Publisher('r16', Int16, queue_size=10)
-
-    #For the Left leg
-    pubTh1r24 = rospy.Publisher('r24', Int16, queue_size=10)
-    pubTh3r23 = rospy.Publisher('r23', Int16, queue_size=10)
-    pubThHipr25 = rospy.Publisher('r25', Int16, queue_size=10)
-    pubTh1r22 = rospy.Publisher('r22', Int16, queue_size=10)
-    pubTh3r21 = rospy.Publisher('r21', Int16, queue_size=10)
-    pubGammalr26 = rospy.Publisher('r26', Int16, queue_size=10)
-
-    
-    rospy.sleep(1)  # Allow time for publisher to connect
-    
-    # Log info for the Right leg
-    rospy.loginfo(f"Publishing to r14: {mov14}")
-    rospy.loginfo(f"Publishing to r13: {mov13}")
-    rospy.loginfo(f"Publishing to r15: {mov15}")
-    rospy.loginfo(f"Publishing to r12: {mov12}")
-    rospy.loginfo(f"Publishing to r11: {mov11}")
-    rospy.loginfo(f"Publishing to r16: {mov16}")
-
-    # Log info for the Left leg
-    rospy.loginfo(f"Publishing to r24: {mov24}")
-    rospy.loginfo(f"Publishing to r23: {mov23}")
-    rospy.loginfo(f"Publishing to r25: {mov25}")
-    rospy.loginfo(f"Publishing to r22: {mov22}")
-    rospy.loginfo(f"Publishing to r21: {mov21}")
-    rospy.loginfo(f"Publishing to r26: {mov26}")
+    print(f"Theta1 shifted Lower motor Left decimal: {int(theta1shiftedll / 360 * 4096)} ")
+    print(f"Theta3 shifted Upper motor Left decimal: {int(theta3shiftedll / 360 * 4096)} ")
+    print(f"TTheta Hip shifted decimal: {int(thetaHipshiftedll / 360 * 4096)} ")
 
 
-    # Publish for the Right leg
-    pubTh1r14.publish(mov14)
-    pubTh3r13.publish(mov13)
-    pubThHipr15.publish(mov15)
-    pubTh1r12.publish(mov12)
-    pubTh3r11.publish(mov11)
-    pubGammarr16.publish(mov16)
+    # Convert to motor-specific range for the Right leg
+    dectheta3shiftedlr = int(theta3shiftedlr / 360 * 4096)
+    dectheta1shiftedlr = int(theta1shiftedlr / 360 * 4096)
+    dectheta3shiftedrr = int(theta3shiftedrr / 360 * 4096)
+    dectheta1shiftedrr = int(theta1shiftedrr / 360 * 4096)
+    decthetaHipshiftedrr = int(thetaHipshiftedrr / 360 * 4096)
+    decgammar = int(gammar / 360 * 4096)
 
-    # Publish for the Left leg
-    pubTh1r24.publish(mov24)
-    pubTh3r23.publish(mov23)
-    pubThHipr25.publish(mov25)
-    pubTh1r22.publish(mov22)
-    pubTh3r21.publish(mov21)
-    pubGammalr26.publish(mov26)
-    
-    rospy.sleep(1)  # Give time for messages to be sent
-    
+    # Convert to motor-specific range for the Left leg
+    dectheta3shiftedll = int(theta3shiftedll / 360 * 4096)
+    dectheta1shiftedll = int(theta1shiftedll / 360 * 4096)
+    dectheta3shiftedrl = int(theta3shiftedrl / 360 * 4096)
+    dectheta1shiftedrl = int(theta1shiftedrl / 360 * 4096)
+    decthetaHipshiftedrl = int(thetaHipshiftedrl / 360 * 4096) #thetaHipshiftedrl i change it to thetaHipshiftedll
+    decgammal = int(gammal / 360 * 4096)
+
+    # All current in decimal
+    current_position_r14 = MotorHandler.get_motor_position('r14') / 360 * 4096
+    current_position_r13 = MotorHandler.get_motor_position('r13') / 360 * 4096
+    current_position_r15 = MotorHandler.get_motor_position('r15') / 360 * 4096
+    current_position_r12 = MotorHandler.get_motor_position('r12') / 360 * 4096
+    current_position_r11 = MotorHandler.get_motor_position('r11') / 360 * 4096
+    current_position_r16 = MotorHandler.get_motor_position('r16') / 360 * 4096
+    current_position_r24 = MotorHandler.get_motor_position('r24') / 360 * 4096
+    current_position_r23 = MotorHandler.get_motor_position('r23') / 360 * 4096
+    current_position_r25 = MotorHandler.get_motor_position('r25') / 360 * 4096
+    current_position_r22 = MotorHandler.get_motor_position('r22') / 360 * 4096
+    current_position_r21 = MotorHandler.get_motor_position('r21') / 360 * 4096
+    current_position_r26 = MotorHandler.get_motor_position('r26') / 360 * 4096
+
+    mov11 = current_position_r11 + 1
+    mov12 = current_position_r12 + 1
+    mov13 = current_position_r13 + 1
+    mov14 = current_position_r14 + 1
+    mov15 = current_position_r15 + 1
+    mov16 = current_position_r16 + 1
+    mov21 = current_position_r21 + 1
+    mov22 = current_position_r22 + 1
+    mov23 = current_position_r23 + 1
+    mov24 = current_position_r24 + 1
+    mov25 = current_position_r25 + 1
+    mov26 = current_position_r26 + 1
+
+
+
+        # Main loop
+    while (mov11 != dectheta3shiftedlr or mov12 != dectheta1shiftedlr or mov13 != dectheta3shiftedrr or mov14 != dectheta1shiftedrr or mov15 != decthetaHipshiftedrr or mov16 != decgammar or mov21 != dectheta3shiftedll or mov22 != dectheta1shiftedll or mov23 != dectheta3shiftedrl or mov24 != dectheta1shiftedrl or mov25 != decthetaHipshiftedrl or mov26 != decgammal):
+
+        move.moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
+
+        # Increment variables as needed
+        if mov11 != dectheta3shiftedlr:
+                mov11 += 1
+        if mov12 != dectheta1shiftedlr:
+                mov12 += 1
+        if mov13 != dectheta3shiftedrr:
+                mov13 += 1
+        if mov14 != dectheta1shiftedrr:
+                mov14 += 1
+        if mov15 != decthetaHipshiftedrr:
+                mov15 += 1
+        if mov16 != decgammar:
+                mov16 += 1
+        if mov21 != dectheta3shiftedll:
+                mov21 += 1
+        if mov22 != dectheta1shiftedll:
+                mov22 += 1
+        if mov23 != dectheta3shiftedrl:
+                mov23 += 1
+        if mov24 != dectheta1shiftedrl:
+                mov24 += 1
+        if mov25 != decthetaHipshiftedrl:
+                mov25 += 1
+        if mov26 != decgammal:
+                mov26 += 1  
+
+    move.moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
+ 
 
 if __name__ == "__main__":
-    try:
-        theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
-        theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
-
-
-        # Convert to motor-specific range for the Right leg
-        dectheta3shiftedlr = int(theta3shiftedlr / 360 * 4096)
-        dectheta1shiftedlr = int(theta1shiftedlr / 360 * 4096)
-        dectheta3shiftedrr = int(theta3shiftedrr / 360 * 4096)
-        dectheta1shiftedrr = int(theta1shiftedrr / 360 * 4096)
-        decthetaHipshiftedrr = int(thetaHipshiftedrr / 360 * 4096)
-        decgammar = int(gammar / 360 * 4096)
-
-        # Convert to motor-specific range for the Left leg
-        dectheta3shiftedll = int(theta3shiftedll / 360 * 4096)
-        dectheta1shiftedll = int(theta1shiftedll / 360 * 4096)
-        dectheta3shiftedrl = int(theta3shiftedrl / 360 * 4096)
-        dectheta1shiftedrl = int(theta1shiftedrl / 360 * 4096)
-        decthetaHipshiftedrl = int(thetaHipshiftedrl / 360 * 4096) #thetaHipshiftedrl i change it to thetaHipshiftedll
-        decgammal = int(gammal / 360 * 4096)
-
-        # All current in decimal
-        current_position_r14 = MotorHandler.get_motor_position('r14') / 360 * 4096
-        current_position_r13 = MotorHandler.get_motor_position('r13') / 360 * 4096
-        current_position_r15 = MotorHandler.get_motor_position('r15') / 360 * 4096
-        current_position_r12 = MotorHandler.get_motor_position('r12') / 360 * 4096
-        current_position_r11 = MotorHandler.get_motor_position('r11') / 360 * 4096
-        current_position_r16 = MotorHandler.get_motor_position('r16') / 360 * 4096
-        current_position_r24 = MotorHandler.get_motor_position('r24') / 360 * 4096
-        current_position_r23 = MotorHandler.get_motor_position('r23') / 360 * 4096
-        current_position_r25 = MotorHandler.get_motor_position('r25') / 360 * 4096
-        current_position_r22 = MotorHandler.get_motor_position('r22') / 360 * 4096
-        current_position_r21 = MotorHandler.get_motor_position('r21') / 360 * 4096
-        current_position_r26 = MotorHandler.get_motor_position('r26') / 360 * 4096
-
-        mov11 = current_position_r11 + 1
-        mov12 = current_position_r12 + 1
-        mov13 = current_position_r13 + 1
-        mov14 = current_position_r14 + 1
-        mov15 = current_position_r15 + 1
-        mov16 = current_position_r16 + 1
-        mov21 = current_position_r21 + 1
-        mov22 = current_position_r22 + 1
-        mov23 = current_position_r23 + 1
-        mov24 = current_position_r24 + 1
-        mov25 = current_position_r25 + 1
-        mov26 = current_position_r26 + 1
-
-
-
-            # Main loop
-        while (mov11 != dectheta3shiftedlr or mov12 != dectheta1shiftedlr or mov13 != dectheta3shiftedrr or mov14 != dectheta1shiftedrr or mov15 != decthetaHipshiftedrr or mov16 != decgammar or mov21 != dectheta3shiftedll or mov22 != dectheta1shiftedll or mov23 != dectheta3shiftedrl or mov24 != dectheta1shiftedrl or mov25 != decthetaHipshiftedrl or mov26 != decgammal):
-
-            moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
-
-            # Increment variables as needed
-            if mov11 != dectheta3shiftedlr:
-                mov11 += 1
-            if mov12 != dectheta1shiftedlr:
-                mov12 += 1
-            if mov13 != dectheta3shiftedrr:
-                mov13 += 1
-            if mov14 != dectheta1shiftedrr:
-                mov14 += 1
-            if mov15 != decthetaHipshiftedrr:
-                mov15 += 1
-            if mov16 != decgammar:
-                mov16 += 1
-            if mov21 != dectheta3shiftedll:
-                mov21 += 1
-            if mov22 != dectheta1shiftedll:
-                mov22 += 1
-            if mov23 != dectheta3shiftedrl:
-                mov23 += 1
-            if mov24 != dectheta1shiftedrl:
-                mov24 += 1
-            if mov25 != decthetaHipshiftedrl:
-                mov25 += 1
-            if mov26 != decgammal:
-                mov26 += 1
-        moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
-    except rospy.ROSInterruptException:
-        pass
+    main()
