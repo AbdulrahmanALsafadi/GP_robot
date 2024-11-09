@@ -294,104 +294,88 @@ def moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,
     
     rospy.sleep(1)  # Give time for messages to be sent
     
-def mainmain():    
-
-
-    theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
-    theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
-
-
-    # Convert to motor-specific range for the Right leg
-    dectheta3shiftedlr = int(theta3shiftedlr / 360 * 4096)
-    dectheta1shiftedlr = int(theta1shiftedlr / 360 * 4096)
-    dectheta3shiftedrr = int(theta3shiftedrr / 360 * 4096)
-    dectheta1shiftedrr = int(theta1shiftedrr / 360 * 4096)
-    decthetaHipshiftedrr = int(thetaHipshiftedrr / 360 * 4096)
-    decgammar = int(gammar / 360 * 4096)
-
-    # Convert to motor-specific range for the Left leg
-    dectheta3shiftedll = int(theta3shiftedll / 360 * 4096)
-    dectheta1shiftedll = int(theta1shiftedll / 360 * 4096)
-    dectheta3shiftedrl = int(theta3shiftedrl / 360 * 4096)
-    dectheta1shiftedrl = int(theta1shiftedrl / 360 * 4096)
-    decthetaHipshiftedrl = int(thetaHipshiftedrl / 360 * 4096) #thetaHipshiftedrl i change it to thetaHipshiftedll
-    decgammal = int(gammal / 360 * 4096)
-
-    # All current in decimal
-    current_position_r14 = MotorHandler.get_motor_position('r14') / 360 * 4096
-    current_position_r13 = MotorHandler.get_motor_position('r13') / 360 * 4096
-    current_position_r15 = MotorHandler.get_motor_position('r15') / 360 * 4096
-    current_position_r12 = MotorHandler.get_motor_position('r12') / 360 * 4096
-    current_position_r11 = MotorHandler.get_motor_position('r11') / 360 * 4096
-    current_position_r16 = MotorHandler.get_motor_position('r16') / 360 * 4096
-    current_position_r24 = MotorHandler.get_motor_position('r24') / 360 * 4096
-    current_position_r23 = MotorHandler.get_motor_position('r23') / 360 * 4096
-    current_position_r25 = MotorHandler.get_motor_position('r25') / 360 * 4096
-    current_position_r22 = MotorHandler.get_motor_position('r22') / 360 * 4096
-    current_position_r21 = MotorHandler.get_motor_position('r21') / 360 * 4096
-    current_position_r26 = MotorHandler.get_motor_position('r26') / 360 * 4096
-
-    mov11 = current_position_r11 + 1
-    mov12 = current_position_r12 + 1
-    mov13 = current_position_r13 + 1
-    mov14 = current_position_r14 + 1
-    mov15 = current_position_r15 + 1
-    mov16 = current_position_r16 + 1
-    mov21 = current_position_r21 + 1
-    mov22 = current_position_r22 + 1
-    mov23 = current_position_r23 + 1
-    mov24 = current_position_r24 + 1
-    mov25 = current_position_r25 + 1
-    mov26 = current_position_r26 + 1
-
-    rospy.sleep(1)  # Give time for messages to be sent
-
-        # Main loop
-    while (mov11 != dectheta3shiftedlr or mov12 != dectheta1shiftedlr or mov13 != dectheta3shiftedrr or mov14 != dectheta1shiftedrr or mov15 != decthetaHipshiftedrr or mov16 != decgammar or mov21 != dectheta3shiftedll or mov22 != dectheta1shiftedll or mov23 != dectheta3shiftedrl or mov24 != dectheta1shiftedrl or mov25 != decthetaHipshiftedrl or mov26 != decgammal):
-
-        moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
-
-        # Increment variables as needed
-        if mov11 != dectheta3shiftedlr:
-            mov11 += 1
-        if mov12 != dectheta1shiftedlr:
-            mov12 += 1
-        if mov13 != dectheta3shiftedrr:
-            mov13 += 1
-        if mov14 != dectheta1shiftedrr:
-            mov14 += 1
-        if mov15 != decthetaHipshiftedrr:
-            mov15 += 1
-        if mov16 != decgammar:
-            mov16 += 1
-        if mov21 != dectheta3shiftedll:
-            mov21 += 1
-        if mov22 != dectheta1shiftedll:
-            mov22 += 1
-        if mov23 != dectheta3shiftedrl:
-            mov23 += 1
-        if mov24 != dectheta1shiftedrl:
-            mov24 += 1
-        if mov25 != decthetaHipshiftedrl:
-            mov25 += 1
-        if mov26 != decgammal:
-            mov26 += 1
-
 
 if __name__ == "__main__":
     try:
-        mov14 = MotorHandler.get_motor_position('r14') / 360 * 4096
-        mov13 = MotorHandler.get_motor_position('r13') / 360 * 4096
-        mov15 = MotorHandler.get_motor_position('r15') / 360 * 4096
-        mov12 = MotorHandler.get_motor_position('r12') / 360 * 4096
-        mov11 = MotorHandler.get_motor_position('r11') / 360 * 4096
-        mov16 = MotorHandler.get_motor_position('r16') / 360 * 4096
-        mov24 = MotorHandler.get_motor_position('r24') / 360 * 4096
-        mov23 = MotorHandler.get_motor_position('r23') / 360 * 4096
-        mov25 = MotorHandler.get_motor_position('r25') / 360 * 4096
-        mov22 = MotorHandler.get_motor_position('r22') / 360 * 4096
-        mov21 = MotorHandler.get_motor_position('r21') / 360 * 4096
-        mov26 = MotorHandler.get_motor_position('r26') / 360 * 4096
+        theta1shiftedrr, theta2rr, theta3shiftedrr, thetaHipshiftedrr, theta1shiftedlr, theta2lr, theta3shiftedlr , thetaHipshiftedlr, gammar= mainRight()
+        theta1shiftedrl, theta2rl, theta3shiftedrl, thetaHipshiftedrl, theta1shiftedll, theta2ll, theta3shiftedll , thetaHipshiftedll, gammal= mainLeft()
+
+
+        # Convert to motor-specific range for the Right leg
+        dectheta3shiftedlr = int(theta3shiftedlr / 360 * 4096)
+        dectheta1shiftedlr = int(theta1shiftedlr / 360 * 4096)
+        dectheta3shiftedrr = int(theta3shiftedrr / 360 * 4096)
+        dectheta1shiftedrr = int(theta1shiftedrr / 360 * 4096)
+        decthetaHipshiftedrr = int(thetaHipshiftedrr / 360 * 4096)
+        decgammar = int(gammar / 360 * 4096)
+
+        # Convert to motor-specific range for the Left leg
+        dectheta3shiftedll = int(theta3shiftedll / 360 * 4096)
+        dectheta1shiftedll = int(theta1shiftedll / 360 * 4096)
+        dectheta3shiftedrl = int(theta3shiftedrl / 360 * 4096)
+        dectheta1shiftedrl = int(theta1shiftedrl / 360 * 4096)
+        decthetaHipshiftedrl = int(thetaHipshiftedrl / 360 * 4096) #thetaHipshiftedrl i change it to thetaHipshiftedll
+        decgammal = int(gammal / 360 * 4096)
+
+        # All current in decimal
+        current_position_r14 = MotorHandler.get_motor_position('r14') / 360 * 4096
+        current_position_r13 = MotorHandler.get_motor_position('r13') / 360 * 4096
+        current_position_r15 = MotorHandler.get_motor_position('r15') / 360 * 4096
+        current_position_r12 = MotorHandler.get_motor_position('r12') / 360 * 4096
+        current_position_r11 = MotorHandler.get_motor_position('r11') / 360 * 4096
+        current_position_r16 = MotorHandler.get_motor_position('r16') / 360 * 4096
+        current_position_r24 = MotorHandler.get_motor_position('r24') / 360 * 4096
+        current_position_r23 = MotorHandler.get_motor_position('r23') / 360 * 4096
+        current_position_r25 = MotorHandler.get_motor_position('r25') / 360 * 4096
+        current_position_r22 = MotorHandler.get_motor_position('r22') / 360 * 4096
+        current_position_r21 = MotorHandler.get_motor_position('r21') / 360 * 4096
+        current_position_r26 = MotorHandler.get_motor_position('r26') / 360 * 4096
+
+        mov11 = current_position_r11 + 1
+        mov12 = current_position_r12 + 1
+        mov13 = current_position_r13 + 1
+        mov14 = current_position_r14 + 1
+        mov15 = current_position_r15 + 1
+        mov16 = current_position_r16 + 1
+        mov21 = current_position_r21 + 1
+        mov22 = current_position_r22 + 1
+        mov23 = current_position_r23 + 1
+        mov24 = current_position_r24 + 1
+        mov25 = current_position_r25 + 1
+        mov26 = current_position_r26 + 1
+
+
+
+            # Main loop
+        while (mov11 != dectheta3shiftedlr or mov12 != dectheta1shiftedlr or mov13 != dectheta3shiftedrr or mov14 != dectheta1shiftedrr or mov15 != decthetaHipshiftedrr or mov16 != decgammar or mov21 != dectheta3shiftedll or mov22 != dectheta1shiftedll or mov23 != dectheta3shiftedrl or mov24 != dectheta1shiftedrl or mov25 != decthetaHipshiftedrl or mov26 != decgammal):
+
+            moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
+
+            # Increment variables as needed
+            if mov11 != dectheta3shiftedlr:
+                mov11 += 1
+            if mov12 != dectheta1shiftedlr:
+                mov12 += 1
+            if mov13 != dectheta3shiftedrr:
+                mov13 += 1
+            if mov14 != dectheta1shiftedrr:
+                mov14 += 1
+            if mov15 != decthetaHipshiftedrr:
+                mov15 += 1
+            if mov16 != decgammar:
+                mov16 += 1
+            if mov21 != dectheta3shiftedll:
+                mov21 += 1
+            if mov22 != dectheta1shiftedll:
+                mov22 += 1
+            if mov23 != dectheta3shiftedrl:
+                mov23 += 1
+            if mov24 != dectheta1shiftedrl:
+                mov24 += 1
+            if mov25 != decthetaHipshiftedrl:
+                mov25 += 1
+            if mov26 != decgammal:
+                mov26 += 1
         moveMotor(mov11,mov12,mov13,mov14,mov15,mov16,mov21,mov22,mov23,mov24,mov25,mov26)
     except rospy.ROSInterruptException:
         pass
