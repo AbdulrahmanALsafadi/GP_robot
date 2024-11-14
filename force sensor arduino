@@ -12,6 +12,8 @@
 #define FORCE_SENSOR_PIN_3 A3
 #define FORCE_SENSOR_PIN_4 A4
 #define FORCE_SENSOR_PIN_5 A5
+#define FORCE_SENSOR_PIN_6 A6
+#define FORCE_SENSOR_PIN_7 A7
 
 void setup() {
   Serial.begin(9600);
@@ -24,6 +26,8 @@ void loop() {
   int Reading3 = analogRead(FORCE_SENSOR_PIN_3);
   int Reading4 = analogRead(FORCE_SENSOR_PIN_4);
   int Reading5 = analogRead(FORCE_SENSOR_PIN_5);
+  int Reading6 = analogRead(FORCE_SENSOR_PIN_6);
+  int Reading7 = analogRead(FORCE_SENSOR_PIN_7);
 
 
   Serial.print("Force sensor reading A0   = ");
@@ -42,5 +46,9 @@ void loop() {
   Serial.println(Reading4);
   Serial.print("Force sensor reading A5   = ");
   Serial.println(Reading5);
-  delay(1000);
+   Serial.print("Force sensor reading A6   = ");
+  Serial.println(Reading6);
+   Serial.print("Force sensor reading A7   = ");
+  Serial.println(Reading7);
+  delay(100);
 }
