@@ -1,11 +1,3 @@
-/*
- * Created by ArduinoGetStarted.com
- *
- * This example code is in the public domain
- *
- * Tutorial page: https://arduinogetstarted.com/tutorials/arduino-force-sensor
- */
-
 #define FORCE_SENSOR_PIN_0 A0
 #define FORCE_SENSOR_PIN_1 A1
 #define FORCE_SENSOR_PIN_2 A2
@@ -18,7 +10,6 @@
 void setup() {
   Serial.begin(9600);
 }
-
 void loop() {
   int Reading0 = analogRead(FORCE_SENSOR_PIN_0);
   int Reading1 = analogRead(FORCE_SENSOR_PIN_1);
@@ -29,26 +20,14 @@ void loop() {
   int Reading6 = analogRead(FORCE_SENSOR_PIN_6);
   int Reading7 = analogRead(FORCE_SENSOR_PIN_7);
 
-
-  Serial.print("Force sensor reading A0   = ");
-  Serial.println(Reading0);
-  
-  Serial.print("Force sensor reading A1   = ");
-  Serial.println(Reading1); // print the raw analog reading
-
-   Serial.print("Force sensor reading A2   = ");
-  Serial.println(Reading2);
-
-  Serial.print("Force sensor reading A3   = ");
-  Serial.println(Reading3);
-
-  Serial.print("Force sensor reading A4   = ");
-  Serial.println(Reading4);
-  Serial.print("Force sensor reading A5   = ");
-  Serial.println(Reading5);
-   Serial.print("Force sensor reading A6   = ");
-  Serial.println(Reading6);
-   Serial.print("Force sensor reading A7   = ");
-  Serial.println(Reading7);
-  delay(100);
+  // Send data in a single line, separated by commas
+  Serial.print(Reading0); Serial.print(",");
+  Serial.print(Reading1); Serial.print(",");
+  Serial.print(Reading2); Serial.print(",");
+  Serial.print(Reading3); Serial.print(",");
+  Serial.print(Reading4); Serial.print(",");
+  Serial.print(Reading5); Serial.print(",");
+  Serial.print(Reading6); Serial.print(",");
+  Serial.println(Reading7); // End line for parsing
+  delay(100); // Adjust delay as needed
 }
