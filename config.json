@@ -1,0 +1,153 @@
+{
+    "controllers": {
+      "my_dxl_controller": {
+        "sync_read": false,
+        "protocol": 1,
+        "attached_motors": [
+          "right",
+          "left"
+        ],
+        "port": "/dev/serial/by-id/usb-FTDI_USB__-__Serial_Converter_FT891LRN-if00-port0"
+      }
+    },
+    "motorgroups": {
+      "right": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "left": [
+        "l1",
+        "l2",
+        "l3",
+        "l4",
+        "l5",
+        "l6"
+      ]
+    },
+    "motors": {
+      "r1": {
+        "offset": -30.0,
+        "type": "MX-28",
+        "id": 11,
+        "angle_limit": [
+          -97,
+          100
+        ],
+        "orientation": "indirect"
+      },
+      "r2": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 12,
+        "angle_limit": [
+          -44,
+          105
+        ],
+        "orientation": "direct"
+      },
+      "r3": {
+        "offset": -22.5,
+        "type": "MX-28",
+        "id": 13,
+        "angle_limit": [
+          -97,
+          100
+        ],
+        "orientation": "indirect"
+      },
+      "r4": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 14,
+        "angle_limit": [
+          -44,
+          105
+        ],
+        "orientation": "direct"
+      },
+      "r5": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 15,
+        "angle_limit": [
+          -31,
+          31
+        ],
+        "orientation": "direct"
+      },
+      "r6": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 16,
+        "angle_limit": [
+          -180.0,
+          180.0
+        ],
+        "orientation": "direct"
+      },
+      "l1": {
+        "offset": -23,
+        "type": "MX-28",
+        "id": 21,
+        "angle_limit": [
+          -97,
+          100
+        ],
+        "orientation": "indirect"
+      },
+      "l2": {
+        "offset": -3.0,
+        "type": "MX-28",
+        "id": 22,
+        "angle_limit": [
+          -44,
+          105
+        ],
+        "orientation": "direct"
+      },
+      "l3": {
+        "offset": -30.0,
+        "type": "MX-28",
+        "id": 23,
+        "angle_limit": [
+          -97,
+          100
+        ],
+        "orientation": "indirect"
+      },
+      "l4": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 24,
+        "angle_limit": [
+          -44,
+          105
+        ],
+        "orientation": "direct"
+      },
+      "l5": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 25,
+        "angle_limit": [
+          -31,
+          31
+        ],
+        "orientation": "direct"
+      },
+      "l6": {
+        "offset": 0.0,
+        "type": "MX-28",
+        "id": 26,
+        "angle_limit": [
+          -180.0,
+          180.0
+        ],
+        "orientation": "direct"
+      }
+    }
+  }
